@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Read in API forecast and output hourly wind power production predictions 
+Read in API forecast and output hourly wind power production predictions
 for the next 24 between 23:00 and 23:00
 Based on SLIMJAB
 """
@@ -33,7 +33,8 @@ def get_wind_speed(forecast: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame object containing wind speed and datetime information.
     """
     assert isinstance(forecast, pd.DataFrame)
-
+    # mph to m/s
+    forecast["F"] = forecast["F"].apply(lambda x: x * 0.44704)
     return forecast[["DateTime", "F"]].reset_index()
 
 

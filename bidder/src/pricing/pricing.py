@@ -197,7 +197,7 @@ def predict_price_tomorrow():
             [f"{tomorrow} {i//2:02d}:{(i%2)*30:02d}:00" for i in range(48)]
         ),
         name="price",
-    ).dropna()
+    ).fillna(method="ffill")
     return series.to_frame()
 
 def append_unique_data_to_database(new_data, table_name, connection_string):

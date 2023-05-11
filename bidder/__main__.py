@@ -43,7 +43,7 @@ def standard_time(time):
 def main():
 
     '''Autobidder main functions here!!'''
-    
+
     tformat = '%Y-%m-%dT%H:%MZ'
 
     print("AUTOBIDDER loop Started!")
@@ -51,23 +51,32 @@ def main():
     #aligntime()     # inital wait for time alignment.
     # get data from api's and save to database B0612 & B1620 yesterday data.
     # infinite loop so the function will operate indefinetly.
-    while True:  
-        
+    # B0620-predicted usage tomorrow, B1620 Actuall usage by type. elexon generation data
+    dates = [(dt.datetime.now()-dt.timedelta(days=1)).strftime('%Y-%m-%d'),
+                    (dt.datetime.now()-dt.timedelta(days=2)).strftime('%Y-%m-%d')] # otherwise it will not properly populate.
+
+    responce = get_bmrs_report('B0620', dates[0], '*')
+    _save_to_database(responce, 'B0620')
+
+    responce = get_bmrs_report('B1620', dates[1], '*')
+    _save_to_database(responce, 'B1620')
+    while True:
+
         timestap = standard_time(dt.datetime.now())
 
-        if int(time.strftime("%H")) > 7: # and int(time.strftime("%M")) < 5:         # Submit all day bids between 7:00 and 7:05. buffer to account for gitter.
+        if int(time.strftime("%H")) == 7  and int(time.strftime("%M")) < 5:         # Submit all day bids between 7:00 and 7:05. buffer to account for gitter.
             print("Starting to generate bids..., time: ", timestap)
             print("Getting energy generation data...")
 
             # get metoffice data get next day forcast 11pm-11pm.
             met_data = get_met_office_data()
             save_to_db(met_data)
-
+            print('met Data ', met_data)
             # B0620-predicted usage tomorrow, B1620 Actuall usage by type. elexon generation data
             dates = [(dt.datetime.now()+dt.timedelta(days=1)).strftime('%Y-%m-%d'),
                             (dt.datetime.now()-dt.timedelta(days=1)).strftime('%Y-%m-%d')] # otherwise it will not properly populate.
-            
-            responce = get_bmrs_report('B0620', dates[0], '*')
+
+            responce = get_bmrs_report('B0620', dates[1], '*')
             _save_to_database(responce, 'B0620')
 
             responce = get_bmrs_report('B1620', dates[1], '*')
@@ -78,14 +87,16 @@ def main():
             energy_data = get_energy_demand(forecast=met_data) # get onsite energy data
             save_to_db_energy(energy_data)
             energy_demand = energy_data['Total demand'].to_numpy()
-            
+
             # get solar and wind data
             solar = get_solar_prediction(met_data)
             save_to_db_solar(solar)
             solar_power = solar['SolarPower'].to_numpy()
+            print('Solar',solar_power)
             wind = get_wind_prediction(met_data)
             save_to_db_wind(wind)
             wind_power = wind['WindPower'].to_numpy()
+            print('Wind',wind_power)
 
             # get price data
             price = predict_price_tomorrow()
@@ -118,7 +129,7 @@ def main():
 
         for i in range(26):     # wait for 26-mins
             time.sleep(60)      # wait for 1-min
-       
+
         aligntime()
 
 def _development__():
@@ -139,10 +150,10 @@ def _development__():
     #codes = ['B0620','B1620']
     #for code in codes:
     #    responce = get_bmrs_report(code, date, '*')
-    #    _save_to_database(responce, code)    
+    #    _save_to_database(responce, code)
 
     #print("Calculating onsite energy data...")
-    
+
     # get onsite energy data
     print("----------------------------------")
     print("Calculating onsite energy data...")
@@ -150,7 +161,7 @@ def _development__():
     energy_data = get_energy_demand(forecast=met_data)
     energy_demand = energy_data['Total demand'].to_numpy()
     print(energy_data)
-    
+
     # solar
     print("----------------------------------")
     print("Calculating solar energy data...")
@@ -182,7 +193,7 @@ def _development__():
     save_to_db_price(price)
     price_list = price['price'].to_numpy()
 
-    
+
     date = dt.datetime.now().strftime('%Y-%m-%d')
 
     # get market orders (price predictions)
@@ -190,7 +201,7 @@ def _development__():
 
     # get order in correct format.
     date = (dt.datetime.now()+dt.timedelta(days=1)).strftime('%Y-%m-%d')
-    # create array of 12 dates  
+    # create array of 12 dates
     date = [date]*48
     period = np.arange(1,49,1)
     sys_price = price_list
@@ -217,5 +228,5 @@ if __name__=="__main__":
     #test_clearout()
     main()
     #_development__()
-    
-    
+
+

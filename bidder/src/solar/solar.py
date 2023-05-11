@@ -52,7 +52,7 @@ def temperature_efficiency(
     Returns:
         float: solar panel efficiency at the given temperature.
     """
-    temperature = forecast["H"] # screen temp
+    temperature = forecast["G"] # screen temp
     temperature_diff = temperature - 25
     eff_change = temperature_diff * temp_coef
     return base_eff + eff_change

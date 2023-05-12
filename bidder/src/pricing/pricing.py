@@ -5,6 +5,7 @@ Adapted from author: jadot-bp
 Author: Rhys Shaw (team ABERCARDSEA).
 
 """
+import warnings
 
 import datetime as dt
 import pickle
@@ -16,19 +17,20 @@ import numpy as np
 import pandas as pd
 
 # need this to unpack the pickles
-import sklearn
 from flask import g
 
 m_model_p = None
 
 # Load autobidder ML model
-with open("bidder/src/pricing/model.p", "rb") as handle:
-    m_model_p = pickle.load(handle)
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", category=UserWarning)
+    with open("bidder/src/pricing/model.p", "rb") as handle:
+        m_model_p = pickle.load(handle)
 
-m_scalar_p = None
-# Load data scaler for autobidder
-with open("bidder/src/pricing/scaler.p", "rb") as handle:
-    m_scalar_p = pickle.load(handle)
+    m_scalar_p = None
+    # Load data scaler for autobidder
+    with open("bidder/src/pricing/scaler.p", "rb") as handle:
+        m_scalar_p = pickle.load(handle)
 
 
 def prepare_data_frame(
@@ -203,19 +205,19 @@ def predict_price_tomorrow():
 def append_unique_data_to_database(new_data, table_name, connection_string):
     # Create a SQLAlchemy engine to connect to the database
     engine = create_engine(connection_string,echo=True)
-    
+
     # Retrieve existing data from the database table
     query = text("SELECT * FROM "+table_name)
     with engine.connect() as conn:
         result = conn.execute(query)
         existing_data = pd.DataFrame(result.fetchall(), columns=result.keys())
-    
+
     # Compare the new data with the existing data to identify duplicates
     duplicate_rows = pd.merge(existing_data, new_data, how='inner')
-    
+
     # Filter out the duplicates from the new data
     filtered_new_data = new_data[~new_data.index.isin(duplicate_rows.index)]
-    
+
     # Append the filtered new data to the existing data in the database
     filtered_new_data.to_sql(table_name, engine, if_exists='append', index=False)
 

@@ -15,6 +15,7 @@ docker run -it bidder-container sh
 
 This will start the container after installing all dependecies.
 The program isnt running yet. If there is no database present.
+
 ```bash
 ./start_bidder.sh
 ```

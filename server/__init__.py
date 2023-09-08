@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 
 db = SQLAlchemy()
-DB_NAME = "/database/llanwrydd.db"
+DB_NAME = "../database/llanwrydd.db"
 
 def create_app():
     app = Flask(__name__)
@@ -16,3 +16,4 @@ def create_app():
     app.register_blueprint(views, url_prefix='/')
 
     return app
+

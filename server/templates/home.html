@@ -1,9 +1,354 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
 <head>
     <title>ABERCARDSEA - Dashboard.</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+    <style>
+
+        HTML {
+            font-family: sans-serif monospace;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+        }
+        p1 {
+            text-align: center;
+        }
+
+        .canvas-grid {
+            display: grid;
+            width: 45%;
+            grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
+            grid-gap: 5%; /* gap between columns */
+            padding: 5%;
+        }
+
+        #containerPriceChart {
+            display: grid;
+            width: 49%;
+            grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
+        }
+
+
+    </style>
 </head>
+
 <body>
     <h1>ABSERCARDSEA - DASHBOARD</h1>
+    <p1>This is the ABERCARDSEA dashboard for the coding challenge.</p1>
+    <p>Words Here discription of what we are looking at.</p>
+    <p>Out prediction HERE.</p>
+    <div id="containerPriceChart">
+        <canvas id="priceforChart" ></canvas>
+        <canvas id="truepriceChart" ></canvas>
+    </div>
+    <div class="canvas-grid">
+        <canvas id="myChart_temp" ></canvas>
+        <canvas id="myChart_windspeed" ></canvas>
+        <canvas id="myChart_windpower" ></canvas>
+        <canvas id="myChart_SolarPower" ></canvas>
+        <canvas id="myChart_EnergyDemand" ></canvas>
+        <canvas id="myChart_EnergyUsage" ></canvas>
+    </div>
+
 </body>
+<script>
+    const DateTime = {{ dates | safe }};
+    const Temperature = {{ temps | safe }};
+    const WindSpeed = {{ windspeed | safe }};
+    const WindPower = {{ windpower | safe }};
+    const WindDateTime = {{ windDateTime | safe }};
+    const SolarPower = {{ solarPower | safe }};
+    const SolarDateTime = {{ solarDateTime | safe }};
+    const EnergyDemand = {{ onsite_Total_demand | safe }};
+    const EnergyDateTime = {{ onsite_Datetime | safe }};
+    const EnergyUsage_elexon =  {{EnergyUsage | safe}};
+    const EnergyUsage_date = {{EnergyUsageDateTime | safe}};
+    const EnergyUsagePeriod =  {{EnergyUsagePeriods | safe}};
+    const PricePredicted = {{PricePredicted | safe}};
+    const PricePredictedDateTime = {{PricePredictedDateTime | safe}};
+
+    const pricefor = document.getElementById('priceforChart').getContext('2d');
+    const priceforChart = new Chart(pricefor, {
+        type: 'line',
+        data: {
+            labels: PricePredictedDateTime,
+            datasets: [{
+                label: 'Price Forcast',
+                data: PricePredicted,
+                fill:false,
+                borderColor: "red",
+
+            }]
+        },
+        options: {
+            legend:{
+                display:false
+            },
+            title: {
+                display: true,
+                text: 'Price Forcast'
+            },
+            scales:{
+                xAxes:[{
+                    ticks:{
+                        autoSkip:true,
+                        maxTicksLimit:10
+                    }
+                }],
+                yAxes:[{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'£/MWh'
+                    }
+                }]
+            }
+
+        }
+    });
+
+    // Create a chart using Chart.js with the data
+    const ctx = document.getElementById('myChart_temp').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: DateTime,
+            datasets: [{
+                label: 'Temperature',
+                data: Temperature,
+                fill:false,
+                borderColor: "red",
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Temperature'
+            },
+            legend:{
+                display:false
+            },
+            scales:{
+                xAxes:[{
+                    ticks:{
+                        autoSkip:true,
+                        maxTicksLimit:10
+                    }
+                }],
+                yAxes:[{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'Celsius'
+                    }
+                }]
+            }
+        }
+    });
+    const ctx2 = document.getElementById('myChart_windspeed').getContext('2d');
+    const myChart2 = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: WindDateTime,
+            datasets: [{
+                label: 'Wind Speed',
+                data: WindSpeed,
+                fill:false,
+                borderColor: "red",
+
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Wind Speed'
+            },
+            legend:{
+                display:false
+            },
+            scales:{
+                xAxes:[{
+                    ticks:{
+                        autoSkip:true,
+                        maxTicksLimit:10
+                    }
+                }],
+                yAxes:[{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'m/s'
+                    }
+                }]
+            }
+
+        }
+    });
+
+    const ctx3 = document.getElementById('myChart_windpower').getContext('2d');
+    const myChart3 = new Chart(ctx3, {
+        type: 'line',
+        data: {
+            labels: WindDateTime,
+            datasets: [{
+                label: 'Wind Power',
+                data: WindPower,
+                fill:false,
+                borderColor: "red",
+
+            }]
+        },
+        options: {
+            scales:{
+                xAxes:[{
+                    ticks:{
+
+                        maxTicksLimit:10
+                    }
+                }]
+            },
+            legend:{
+                display:false
+            },
+            title: {
+                display: true,
+                text: 'Wind Power'
+            },
+            scales:{
+                xAxes:[{
+                    ticks:{
+                        autoSkip:true,
+                        maxTicksLimit:10
+                    }
+                }],
+                yAxes:[{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'kW'
+                    }
+                }]
+            }
+
+
+        }
+    });
+
+    const ctx4 = document.getElementById('myChart_SolarPower').getContext('2d');
+    const myChart4 = new Chart(ctx4, {
+        type: 'line',
+        data: {
+            labels: SolarDateTime,
+            datasets: [{
+                label: 'Solar Power',
+                data: SolarPower,
+                fill:false,
+                borderColor: "red",
+
+            }]
+        },
+        options: {
+            legend:{
+                display:false
+            },
+            title: {
+                display: true,
+                text: 'Solar Power'
+            },
+            scales:{
+                xAxes:[{
+                    ticks:{
+                        autoSkip:true,
+                        maxTicksLimit:10
+                    }
+                }],
+                yAxes:[{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'kW'
+                    }
+                }]
+            }
+
+        }
+    });
+
+    const ctx5 = document.getElementById('myChart_EnergyDemand').getContext('2d');
+    const myChart5 = new Chart(ctx5, {
+        type: 'line',
+        data: {
+            labels: EnergyDateTime,
+            datasets: [{
+                label: 'Onsite Energy Demand',
+                data: EnergyDemand,
+                fill:false,
+                borderColor: "red",
+
+            }]
+        },
+        options: {
+            legend:{
+                display:false
+            },
+            title: {
+                display: true,
+                text: 'Onsite Energy Demand'
+            },
+            scales:{
+                xAxes:[{
+                    ticks:{
+                        autoSkip:true,
+                        maxTicksLimit:10
+                    }
+                }],
+                yAxes:[{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'kW'
+                    }
+                }]
+            }
+
+        }
+    });
+
+    const ctx6 = document.getElementById('myChart_EnergyUsage').getContext('2d');
+    const myChart6 = new Chart(ctx6, {
+        type: 'line',
+        data: {
+            labels: EnergyUsagePeriod,
+            datasets: [{
+                label: 'Onsite Energy Demand',
+                data: EnergyUsage_elexon,
+                fill:false,
+                borderColor: "red",
+
+            }]
+        },
+        options: {
+            legend:{
+                display:false
+            },
+            title: {
+                display: true,
+                text: 'National Energy Demand Forecast',
+            },
+            scales:{
+                xAxes:[{
+                    ticks:{
+                        autoSkip:true,
+                        maxTicksLimit:10
+                    }
+                }],
+                yAxes:[{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'kW'
+                    }
+                }]
+            }
+
+        }
+    });
+
+</script>
 </html>

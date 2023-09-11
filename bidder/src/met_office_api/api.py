@@ -28,6 +28,18 @@ def get_met_office_data():
     assert responce.status_code == 200
     return interpolate_api_responce(responce)
 
+def get_average_met_office_data():
+    '''Gets the national average forcast'''
+    base_met_office_url = 'http://datapoint.metoffice.gov.uk/public/data/'
+    resource = 'val/wxfcs/regionalforecast/json/515' # uk averge forcast
+    url = base_met_office_url + resource
+
+    responce = requests.get(url, params={'key': met_office_key,'res': '3hourly'})
+
+    assert responce.status_code == 200
+    return interpolate_api_responce(responce)
+
+
 def save_to_db(processed_data):
     # works
     #processed_data = get_met_office_data()
@@ -37,6 +49,11 @@ def save_to_db(processed_data):
 
 
 if __name__ == '__main__':
-    pass
-    #responce = save_to_db()
+    responce = get_average_met_office_data()
+    # save text respoce to markdown file
+    with open('met_office_api.md', 'w') as f:
+        f.write(responce.text)
+    print(responce.text)
+
+    #respnce = save_to_db()
     #print(responce)

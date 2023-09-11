@@ -61,3 +61,10 @@ CREATE TABLE carbon_dioxide_saved(
     co2saved DECIMAL(8,2),
     PRIMARY KEY ( time )
 );
+
+CREATE TABLE carbonIntensity(
+    time DATETIME NOT NULL,
+    intensity INT,
+    ind VARCHAR(16),
+    PRIMARY KEY ( time )
+);

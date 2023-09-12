@@ -43,7 +43,8 @@ def datetime_array(response: Response, hours: int, step: int) -> List[str]:
 
 
 def count_forecasts(response: Response) -> int:
-    """Returns the total number of forecasts in an API response.
+    """
+    Returns the total number of forecasts in an API response.
 
     Args:
         response (Response): The json response from a met office API

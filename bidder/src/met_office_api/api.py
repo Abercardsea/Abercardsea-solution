@@ -48,11 +48,20 @@ def save_to_db(processed_data):
     processed_data.to_sql('met_office', engine, if_exists='append', index=False)
 
 
+
+def save_to_db_national_average(processed_data):
+    # works
+    #processed_data = get_met_office_data()
+    # save to db
+    engine = create_engine("sqlite:///database/llanwrydd.db", echo=True)
+    processed_data.to_sql('met_office_ave', engine, if_exists='append', index=False)
+
+
 if __name__ == '__main__':
     responce = get_average_met_office_data()
     # save text respoce to markdown file
-    with open('met_office_api.md', 'w') as f:
-        f.write(responce.text)
+    #with open('met_office_api.md', 'w') as f:
+    #    f.write(responce.text)
     print(responce.text)
 
     #respnce = save_to_db()

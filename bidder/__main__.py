@@ -3,7 +3,7 @@ import datetime as dt
 import numpy as np
 from bidder.src.bidding.util import register_bidder, get_output_template, submit_orders, parse_data, get_orders, submit_orders_mock, get_clearout
 from bidder.src.bidding.slimjab_bidder import slimjab_bidder
-from bidder.src.met_office_api.api import get_met_office_data, save_to_db
+from bidder.src.met_office_api.api import get_met_office_data, save_to_db, get_average_met_office_data, save_to_db_national_average
 from bidder.src.elexon_api.elexon_utils import get_bmrs_report, _save_to_database
 from bidder.src.onsite.onsite import get_energy_demand, save_to_db_energy
 from bidder.src.solar import get_solar_prediction, save_to_db_solar
@@ -64,14 +64,18 @@ def main():
 
         timestap = standard_time(dt.datetime.now())
 
-        if int(time.strftime("%H")) == 7  and int(time.strftime("%M")) < 5:         # Submit all day bids between 7:00 and 7:05. buffer to account for gitter.
+        if int(time.strftime("%H")) == 9  and int(time.strftime("%M")) > 5:         # Submit all day bids between 7:00 and 7:05. buffer to account for gitter.
             print("Starting to generate bids..., time: ", timestap)
             print("Getting energy generation data...")
 
             # get metoffice data get next day forcast 11pm-11pm.
             met_data = get_met_office_data()
             save_to_db(met_data)
-            print('met Data ', met_data)
+            print('!!!!! GETTING AVERAGE MET DATA !!!!!')
+            met_ave_data = get_average_met_office_data()
+            save_to_db_national_average(met_ave_data)
+            print('met ave Data ', met_ave_data)
+
             # B0620-predicted usage tomorrow, B1620 Actuall usage by type. elexon generation data
             dates = [(dt.datetime.now()+dt.timedelta(days=1)).strftime('%Y-%m-%d'),
                             (dt.datetime.now()-dt.timedelta(days=1)).strftime('%Y-%m-%d')] # otherwise it will not properly populate.
@@ -117,7 +121,7 @@ def main():
             orders = pd.DataFrame(orders)
             print("Submitting orders...")
             try:
-                responce = submit_orders(orders)
+               # responce = submit_orders(orders)
                 #responce = submit_orders(orders)
                 print("Sever Reponded with: ",responce.status_code)
             except:

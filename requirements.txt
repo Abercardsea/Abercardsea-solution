@@ -8,3 +8,4 @@ python-dotenv==0.19.2
 scipy==1.8.1
 SQLAlchemy==2.0.9
 requests==2.26.0
+flas-navigation

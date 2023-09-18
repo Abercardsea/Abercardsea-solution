@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>ABERCARDSEA - Dashboard.</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
     <style>
 
         HTML {
-            font-family: sans-serif monospace;
+
+            font-family:'Courier New', Courier, monospace;
             background-color: #f5f5f5;
+            padding: 0;
+            margin: 0;
+
         }
-        h1 {
-            text-align: center;
+
+        body {
+            margin-left: 10%;
+            margin-top: 10%;
         }
-        p1 {
-            text-align: center;
-        }
+
 
         .canvas-grid {
             display: grid;
@@ -26,31 +31,164 @@
         }
 
         #containerPriceChart {
-            display: grid;
-            width: 49%;
-            grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
+            display: inline-block;
+            width: 100%;
+            /*grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
+            border: 1px solid black;
         }
 
+        li  {
+            float: left;
+            border-right: 1px solid #00000000;
+        }
+
+        li:last-child {
+            border-right: none;
+        }
+        li a {
+            display: block;
+            color: #000000;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        ul {
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+
+            background-color: #ffffff;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            list-style-type: none;
+        }
+
+        li a:hover{
+            background-color: #ddd;
+            color: black;
+        }
+
+        li div {
+            display: block;
+            color: #666;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        h1 {
+            text-align: center;
+        }
+        p {
+            text-align: center;
+        }
+
+        #Vertical-left-nav {
+            height: 100%;
+            width: 10%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #ffffff;
+            overflow-x: hidden;
+            padding-top: 10%;
+            justify-content: center;
+            align-items: center;
+            display: inline-block;
+
+        }
+
+        #maps_container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vb;
+            border: 5px solid black;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        a {
+            background-color: #ffffff;
+            color: black;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 4px 2px;
+            }
+
+        a:hover {
+            background-color: #926565;
+            color: black;
+        }
+
+        h2 {
+            text-align: center;
+        }
 
     </style>
 </head>
+<div id="Vertical-left-nav">
+    <p>Graph Links</p>
+    <a href="#price_data">Price</a>
+    <a href="#Weather_data">Weather</a>
+    <a href="#Energy_generation_data">Energy</a>
+    <a href="#Energy_data_container">Demand</a>
+</div>
+
+<ul>
+    <li><div id="status"></div></li>
+    <li><a href="/">Home</a></li>
+    <li><a href="/doc">Docs</a></li>
+    <li><a href="https://github.com/Abercardsea/Abercardsea-solution">GitHub</a></li>
+    <li><a href="https://github.com/Abercardsea/Abercardsea-solution/issues">Report Bugs</a></li>
+</ul>
+
+
 
 <body>
-    <h1>ABSERCARDSEA - DASHBOARD</h1>
-    <p1>This is the ABERCARDSEA dashboard for the coding challenge.</p1>
-    <p>Words Here discription of what we are looking at.</p>
-    <p>Out prediction HERE.</p>
-    <div id="containerPriceChart">
-        <canvas id="priceforChart" ></canvas>
-        <canvas id="truepriceChart" ></canvas>
+    <div>
+        <h1>ABSERCARDSEA - DASHBOARD</h1>
+        <p>This is the ABERCARDSEA dashboard.</p>
+        <p>Here are presented current data from the bidder, along with the status of the server.</p>
     </div>
-    <div class="canvas-grid">
-        <canvas id="myChart_temp" ></canvas>
-        <canvas id="myChart_windspeed" ></canvas>
-        <canvas id="myChart_windpower" ></canvas>
-        <canvas id="myChart_SolarPower" ></canvas>
-        <canvas id="myChart_EnergyDemand" ></canvas>
-        <canvas id="myChart_EnergyUsage" ></canvas>
+
+    <div id="maps_container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d29922.14481883917!2d-3.6856444671372577!3d52.10502009072068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNTLCsDA2JzE4LjQiTiAzwrA0MCcwNC44Ilc!5e0!3m2!1sen!2suk!4v1695029055845!5m2!1sen!2suk" width="100%", height="100%"  style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    <div id="price_data">
+        <h2>Price Data</h2>
+        <div id="containerPriceChart">
+            <canvas id="priceforChart" ></canvas>
+            <canvas id="priceforimbal" ></canvas>
+        </div>
+    </div>
+
+    <div id="Weather_data">
+        <h2>Weather Data</h2>
+        <div class="canvas-grid">
+            <canvas id="myChart_temp" ></canvas>
+            <canvas id="myChart_windspeed" ></canvas>
+        </div>
+    </div>
+
+    <div id="Energy_generation_data">
+        <h2>Energy Generation Data</h2>
+        <div class="canvas-grid">
+            <canvas id="myChart_windpower" ></canvas>
+            <canvas id="myChart_SolarPower" ></canvas>
+        </div>
+    </div>
+
+    <div id="Energy_data_container">
+        <h2>Energy Data</h2>
+        <div class="canvas-grid">
+            <canvas id="myChart_EnergyDemand" ></canvas>
+            <canvas id="myChart_EnergyUsage" ></canvas>
+        </div>
     </div>
 
 </body>
@@ -70,7 +208,21 @@
     const PricePredicted = {{PricePredicted | safe}};
     const PricePredictedDateTime = {{PricePredictedDateTime | safe}};
 
+    const Imbal_market = {{Imbalance_Market | safe}};
+    const Imbal_marketDateTime = {{Imbalance_Market_Datetime | safe}};
+    // status is a string
+
+    const status = {{status | safe}}; // this is a string
+
+    if (status == true){
+        document.getElementById("status").style.backgroundColor = "lightgreen";
+        document.getElementById("status").innerHTML = "Current Status: Running";
+    }else{
+        document.getElementById("status").style.backgroundColor = "red";
+        document.getElementById("status").innerHTML = "Current Status: Not Running";
+    }
     const pricefor = document.getElementById('priceforChart').getContext('2d');
+
     const priceforChart = new Chart(pricefor, {
         type: 'line',
         data: {
@@ -90,6 +242,44 @@
             title: {
                 display: true,
                 text: 'Price Forcast'
+            },
+            scales:{
+                xAxes:[{
+                    ticks:{
+                        autoSkip:true,
+                        maxTicksLimit:10
+                    }
+                }],
+                yAxes:[{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'£/MWh'
+                    }
+                }]
+            }
+
+        }
+    });
+    const priceforimbal = document.getElementById('priceforimbal').getContext('2d');
+    const priceforChart_imbal = new Chart(priceforimbal, {
+        type: 'line',
+        data: {
+            labels: Imbal_marketDateTime,
+            datasets: [{
+                label: 'Imbalance Market Price (acutal)',
+                data: Imbal_market,
+                fill:false,
+                borderColor: "red",
+
+            }]
+        },
+        options: {
+            legend:{
+                display:false
+            },
+            title: {
+                display: true,
+                text: 'Imbalance Market Price (acutal)'
             },
             scales:{
                 xAxes:[{

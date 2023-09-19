@@ -7,6 +7,11 @@
 
 # First time set-up
 
+Got into bidder/src and make a copy of the config_example.py file and rename it to config.py. You need to add your API keys into this file. It will then be read from the API moduls when needed. You should keep this file private and not shared on github for security reasons.
+
+
+The requirement.txt file here is for pytest to run tests, and should be all the dependicies needed to run the application.
+
 Run docker:
 ```bash
 docker build -t bidder-container .

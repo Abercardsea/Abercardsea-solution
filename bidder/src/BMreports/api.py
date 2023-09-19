@@ -4,12 +4,12 @@ from datetime import datetime, timedelta
 import pandas as pd
 import csv
 import xml.etree.ElementTree as ET
-
+import bidder.src.config as config
 from io import StringIO
 
 
 service_type = 'csv'
-API_key = "cncw84m146gcswv"
+API_key = config.BMREPORT_KEY
 
 
 def get_bmreport_data_imbalance():

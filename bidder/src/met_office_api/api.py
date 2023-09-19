@@ -1,8 +1,9 @@
 import requests
 from bidder.src.met_office_api.met_office_utils import interp_30min, cut_frame
 from sqlalchemy import create_engine
+import bidder.src.config as config
 
-met_office_key = '50622d98-cbda-4632-b60c-f42db0202185'
+met_office_key = config.METOFFICE_KEY
 symbol_meaning = [
 'Wind direction (16 point compass)',
 'Wind speed (mph)',

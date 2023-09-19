@@ -4,8 +4,10 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 from typing import Union, List, Optional
+import bidder.src.config as config
 
-ELEXON_KEY = '8t20g6yokupgit5'
+ELEXON_KEY = config.ELEXON_KEY
+
 user_guide = 'https://bscdocs.elexon.co.uk/guidance-notes/bmrs-api-and-data-push-user-guide'
 CODE_DESCRIPTORS = {
     "B1720": "Amount of balancing reserves under contract",
@@ -73,8 +75,8 @@ def _save_to_database(elexon_data,code):
         label = 'Power System Resource  Type'
         target = 'Quantity'
         processed_data = df_unstacker(elexon_data, Anchors, label, target)
-        
-    
+
+
     engine = create_engine("sqlite:///database/llanwrydd.db", echo=True)
     processed_data.to_sql(f'elexon{code}', engine, if_exists='append', index=False)
     #append_unique_data_to_database(processed_data, f'elexon{code}', "sqlite:///database/llanwrydd.db")

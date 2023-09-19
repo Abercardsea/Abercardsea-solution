@@ -13,8 +13,9 @@
             }
 
             body {
-
-            margin-top: 10%;
+            margin-left: 100px;
+            margin-right: 100px;
+            margin-top: 5%;
             }
             li  {
             float: left;
@@ -47,15 +48,22 @@
                 background-color: #ddd;
                 color: black;
             }
+
+            .list {
+                margin-right: 2%;
+                display: inline-block;
+
+            }
+
         </style>
     </head>
 
     <div id="nav_bar">
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/doc">Docs</a></li>
-        <li><a href="https://github.com/Abercardsea/Abercardsea-solution">GitHub</a></li>
-    </ul>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/doc">Docs</a></li>
+            <li><a href="https://github.com/Abercardsea/Abercardsea-solution">GitHub</a></li>
+        </ul>
 
     </div>
 
@@ -70,18 +78,22 @@
         <p>database: all data from the bidder is saved to the database.</li>
         <p>server: This is a front-end &#39;Flask&#39; server that displays contents of the database. (this only reads form the database and does not interact with the bidder.)</li>
         <h2 id="general-warning-and-top-tips-">General Warning and top tips.</h2>
+
         <p>This solution is written in python (:&lt;) and uses the requests library to interact with the api. The main bidder is just a python module that can be run from the command line. The server is a flask server that can be run from the command line.
         To make changes to the flask server it would be useful for you to first do a flask tutorial or equivalent.</p>
         <p>SQL and the database. the sql knowledge you need is quite minimal most are for getting and writing data to the database. Use a database viewer to see the data in the database to test your queries.</p>
+        <p>The source code contains significant technical debt as some functions are not utilised and are leftover form previous iterations/teams.</p>
         <h2>How to get Started</h2>
         <p>You need to get your own API keys to make requests. The APIs we have utilised include:</p>
-        <ul>
-        <li>MetOffice - requires key</li>
-        <li>BMreports - requires key</li>
-        <li>Elexon - requires key</li>
-        <li>RSE - requires key</li>
-        </ul>
-        <h2 id="bidder">bidder</h2>
+        <div class="list">
+        <div class="item">MetOffice - requires key</div>
+        <div class="item">BMreports - requires key</div>
+        <div class="item">Elexon - requires key</div>
+        <div class="item">RSE - requires key</div>
+        </div>
+        <p>You ca obtain keys by going ot the approprate sites and making a api account, it should then give you a key or allow you to request one.</p>
+        <h2 id="bidder">Bidder</h2>
+        <p>This bidder currently does not implement out model due to training beging done last minute, the version of the bidder here uses the previous teams model which does not preform as well as our trained transformer.</p>
         <p>The main.py file contains the main bidding loop where the process of getting api data and determining bids is done.
         this also submits the bids.</p>
         <p>the src folder contains the code for the bidder. These are seperted by functionality and api interaction.</p>
@@ -92,8 +104,10 @@
         <h2 id="how-to-run-the-code">How to run the code</h2>
         <h3 id="bidder">bidder</h3>
         <p>To run the bidder you need to run the bidder as a module. It will excute the code in the main.py file. this can be done from the root dir as python -m bidder</p>
+
         <h3 id="server">Server</h3>
         <p>This can be rin by stating the flask server from the root dir. I have written a python script to do this for you. This can be run as python start_server.py</p>
+        <p>To further improve the server, you could add a login and authentication segment, this will keep the information private.</p>
         <h3 id="database">Database</h3>
         <p>The database is a sqlite database. This is a file that can be opened with a database viewer. I use DB Browser for SQLite. This can be downloaded from <a href="https://sqlitebrowser.org/">https://sqlitebrowser.org/</a></p>
         <p>To create it there is a scrip in the database folder. in this folder the databse will live. The script is called create_db.py. Running this normally should initalise the database. If you want to start again you can delete the database file and run the script again.</p>

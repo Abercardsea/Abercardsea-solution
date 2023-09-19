@@ -164,3 +164,4 @@ cython_debug/
 BMReports_1.ipynb
 met_office_api.md
 BMReports_1.ipynb
+bidder/src/config.py

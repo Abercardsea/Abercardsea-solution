@@ -10,6 +10,35 @@ from bidder.src.solar import get_solar_prediction, save_to_db_solar
 from bidder.src.wind import get_wind_prediction, save_to_db_wind
 from bidder.src.pricing.pricing import predict_price_tomorrow, save_to_db_price
 import pandas as pd
+import os
+
+def load_environment_variables_from_file(file_path):
+    """
+    Load environment variables from a text file and add them to the environment.
+
+    Args:
+    file_path (str): The path to the text file containing variable assignments.
+
+    Returns:
+    None
+    """
+    try:
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+            for line in lines:
+                # Split each line into variable and value (assuming they are separated by '=')
+                parts = line.strip().split('=')
+                if len(parts) == 2:
+                    variable_name, variable_value = parts[0].strip(), parts[1].strip()
+                    # Set the environment variable
+                    os.environ[variable_name] = variable_value
+                else:
+                    print(f"Invalid line in the file: {line.strip()}")
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
 
 
 def aligntime():
